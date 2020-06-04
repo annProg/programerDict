@@ -7,13 +7,13 @@ workspace:
 
 steps:
 - name: pdf
-  image: panbook:latest
+  image: ann17/panbook:latest
   pull: if-not-exists
   commands:
   - DEBUG=-d make
 
 - name: epub
-  image: panbook:latest
+  image: ann17/panbook:latest
   pull: if-not-exists
   commands:
   - DEBUG=-d make epub
