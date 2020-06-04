@@ -1,0 +1,35 @@
+kind: pipeline
+name: default
+
+workspace:
+  base: /book
+  path: programerDict
+
+steps:
+- name: pdf
+  image: panbook:latest
+  pull: if-not-exists
+  commands:
+  - DEBUG=-d make
+
+- name: epub
+  image: panbook:latest
+  pull: if-not-exists
+  commands:
+  - DEBUG=-d make epub
+- name: publish-pdf
+  image: annprog/rsync:latest
+  pull: if-not-exists
+  settings:
+    src: build/*.pdf
+    dest: 172.17.0.1::panbook
+  depends_on:
+  - pdf
+- name: publish-epub
+  image: annprog/rsync:latest
+  pull: if-not-exists
+  settings:
+    src: build/*.epub
+    dest: 172.17.0.1::panbook
+  depends_on:
+  - epub  
