@@ -1,7 +1,8 @@
 [![Build Status](https://ci.annhe.net/api/badges/annProg/programerDict/status.svg)](https://ci.annhe.net/annProg/programerDict)
 
 # programerDict
-程序员词典，程序员容易读错的单词。Programer Dict
+
+IT 行业有很多容易读错的单词，很多新造的轮子可能也会用到生造词。本项目搜集这样的单词，标注音标，并提供简单的释义。
 
 ## 下载
 
