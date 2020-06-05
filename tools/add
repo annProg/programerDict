@@ -1,15 +1,51 @@
 #!/bin/bash
+# 修改自 https://github.com/shell-ex/dict
 
 [ $# -lt 1 ] && echo "$0 word" && exit 1
-type trans &>/dev/null || echo "Please install trans. See: https://github.com/soimort/translate-shell"
 
 WORD=$1
 DIR="src/`echo ${WORD:0:1} |tr '[a-z]' '[A-Z]'`"
 DEST="$DIR/$WORD.md"
 echo "$WORD will save to DIR $DIR"
-trans -no-ansi :zh $1 |head -n 4 > $DEST
 
-sed -i -r 's#^/(.*)#:    [/\1]{.ipa}#g' $DEST
-sed -i '4s/^/:    &/g' $DEST
+ARGS=1
+E_BADARGS=65
+TEM_FILE="/tmp/dict.tmp"
+ 
+if [ $# -ne "$ARGS" ]
+ then
+    echo "Usage:`basename $0` word"
+    exit $E_BADARGS
+fi
+ 
+# 抓取页面，删除html代码，空行等，只留下想要的内容
+curl -s 'http://dict.youdao.com/search?q='$1'' | awk 'BEGIN{j=0;i=0;} {if(/phrsListTab/){i++;} if(i==1){print $0; if(/<\/ul>/){i=0;}} if(/collinsToggle/){ j++;} if(j==1) {print $0; if(/<\/ul>/){j=0;}}}' | sed 's/<[^>]*>//g' | sed 's/&nbsp;//g'| sed 's/&rarr;//g' | sed 's/^\s*//g' | sed '/^$/d' |head -n6> $TEM_FILE
+ 
+ipa=""
+trans=""
+ 
+while read line
+do
+	echo $line |grep -E '^\[' &>/dev/null && r=0 || r=1
+	if [ $r -eq 0 ];then
+		ipa="`echo $line |sed -r 's/\[|\]/\//g'` $ipa"
+	else
+		[ "$line"x == "$WORD"x ] && continue
+		[ "$line"x == "英"x ] && continue
+		[ "$line"x == "美"x ] && continue
+		trans="$line"
+	fi
+done < $TEM_FILE
+
+[ "$ipa"x == ""x ] && ipa="/todo/"
+[ "$trans"x == ""x ] && trans="释义："
+ipa=`echo $ipa |sed 's#/ /#; #g'`
+
+cat > $DEST <<EOF
+$WORD
+:    [$ipa]{.ipa}
+:    $trans
+EOF
 
 cat $DEST
+exit 0

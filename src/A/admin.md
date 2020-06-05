@@ -1,4 +1,3 @@
-
 admin
-:    [/ˈædmɪn/]{.ipa}
-:    管理员
+:    [/ˈædmɪn; ˈædmɪn/]{.ipa}
+:    abbr. 管理，行政（administration）
