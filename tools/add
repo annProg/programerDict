@@ -1,0 +1,12 @@
+#!/bin/bash
+
+[ $# -lt 1 ] && echo "$0 word" && exit 1
+type trans &>/dev/null || echo "Please install trans. See: https://github.com/soimort/translate-shell"
+
+WORD=$1
+DIR="src/`echo ${WORD:0:1} |tr '[a-z]' '[A-Z]'`"
+DEST="$DIR/$WORD.md"
+echo "$WORD will save to DIR $DIR"
+trans $1 |head -n4> $DEST
+
+sed -i -r 's#^/(.*)#:    [/\1]{.ipa}#g' $DEST
