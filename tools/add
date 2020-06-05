@@ -7,6 +7,9 @@ WORD=$1
 DIR="src/`echo ${WORD:0:1} |tr '[a-z]' '[A-Z]'`"
 DEST="$DIR/$WORD.md"
 echo "$WORD will save to DIR $DIR"
-trans $1 |head -n4> $DEST
+trans -no-ansi :zh $1 |head -n 4 > $DEST
 
 sed -i -r 's#^/(.*)#:    [/\1]{.ipa}#g' $DEST
+sed -i '4s/^/:    &/g' $DEST
+
+cat $DEST
