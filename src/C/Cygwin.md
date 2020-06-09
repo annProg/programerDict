@@ -1,3 +1,3 @@
 Cygwin
-:    [/todo/]{.ipa}
-:    n. 小型的UNIX模拟环境
+:    [/sigwin/]{.ipa}
+:    Cygwin 是一个在 Windows 平台上运行的类 UNIX 模拟环境。
